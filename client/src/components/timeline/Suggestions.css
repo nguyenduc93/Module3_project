@@ -1,0 +1,88 @@
+.suggestions{
+    margin-top: 40px;
+    margin-right: 20px;
+}
+.suggestions_Pro{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.suggestions_avatar{
+    display: flex;
+    flex-direction: row;
+   align-items: center;
+}
+.suggestions_title{
+    color: grey;
+    
+    display: flex;
+    justify-content: space-between;
+}
+.all{
+    text-decoration: none;
+    color: black;
+}
+.all:hover{
+    color: grey;
+}
+.userName_left{
+    display: flex;
+    align-items: center;
+}
+.userName_info{
+    display: flex;
+    flex-direction: column;
+}
+.relation{
+    color: grey;
+    font-size: 12px;
+}
+.suggestions_userName{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.folow_button{
+    color: rgb(0,149,246);
+    font-weight: bold;
+    background: 0;
+    border: 0;
+    font-size: 13px;
+}
+.folow_button1{
+    color: rgb(22,22,22);
+    background: 0;
+    border: 0;
+    font-size: 13px;
+}
+.folow_button:hover{
+    color: rgba(93, 93, 92, 0.954);
+    cursor: pointer;
+}
+.folow_button1:hover{
+    color: rgba(93, 93, 92, 0.954);
+    cursor: pointer;
+}
+.userName{
+    font-weight: 600;
+    font-size: 14px;
+}
+.avatar{
+    margin-right: 10px;
+}
+.user_name{
+    text-decoration: none;
+}
+.user_name b{
+    color: rgb(27, 26, 26);
+}
+.text1{
+    color: #0095f6;
+}
+.user_name1{
+    padding-top: 20px;
+    padding-left: 5px;
+}

@@ -1,0 +1,13 @@
+html{
+    scroll-behavior: smooth;
+}
+.homepage{
+    display: flex;
+    flex-direction: row;
+}
+.homepage_nav{
+    flex: 0.25;
+}
+.homepage_timeline{
+    flex: 0.75;
+}

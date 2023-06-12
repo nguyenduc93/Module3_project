@@ -1,0 +1,226 @@
+.sidenav{
+    position: fixed;
+    z-index: 99; 
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    border-right: 1px solid #8c8989;
+    padding-right: 80px;
+    height: 100%;
+}
+.sidenav_logo{
+    width: 120px;
+    margin: 25px;
+}
+.sidenav_buttons{
+    display: flex;
+    flex-direction: column;
+}
+.sidenav_button:focus {
+    color: rgb(154, 154, 154);
+}
+  
+.sidenav_button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: transparent;
+    margin: 5px 10px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    width: 100%;
+    text-decoration: none;
+    border: transparent !important;
+    color: #2b2a2a;
+}
+.sidenav_button:hover{
+    cursor: pointer;
+    background-color: rgba(249, 248, 248, 0.893);
+}
+.sidenav_button > span {
+    font-size: 20px !important;
+    /* font-weight: bolder; */
+    margin-left: 10px;
+}
+.sidenav_more{
+    position: fixed;
+    bottom: 3px;
+}
+#demo-customized-button{
+    background-color: transparent;
+    color: #000;
+}
+#demo-customized-menu{
+    z-index: 99999;
+}
+.menuDrop{
+    padding-bottom: 30px !important;
+}
+.nav123{
+margin-left: 290px;
+border-radius: 10px;
+}
+.containerr{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* margin: 5px 10px; */
+    /* padding: 10px 15px; */
+    border-radius: 15px;
+    width: 100%;
+    margin-left: 5px;
+}
+.span1{
+    font-size: 20px;
+    color: #2b2a2a;
+    margin-right: 10px;
+    text-transform: capitalize;
+    font-family: var(--bs-body-font-family);
+    font-weight: 450 ;
+}
+.span2{
+    font-size: 30px !important;
+}
+.btn_bot{
+    width: 300px;
+    /* padding-left: 50px; */
+}
+.menuDrop:hover{
+    border-radius: 10px;
+}
+.search_nav{
+    border: 1px solid bisque;
+    width: 340px;
+    border-radius: 10px;
+    background-color: #efefef;
+    height: 40px;
+    padding: 10px;
+    border: transparent;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+.input_nav{
+    background: transparent;
+    border: transparent;
+    outline: none;
+}
+.span_icon{
+    margin-left: 100px;
+}
+.search_nav button{
+    background: transparent;
+    border: transparent;
+    cursor: pointer;
+}
+.search_nav .span_icon .span1:hover{
+    color: #a3a3a3;
+}
+.menuDrop button{
+    background: transparent;
+    border: transparent;
+}
+.menuDrop2{
+    background:transparent;
+    border: transparent;
+    padding-left: 20px;
+    padding-bottom: 30px;
+}
+.menuDrop2:hover{
+    color: #8c8989;
+}
+.search_avatar{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+.search_avatar1{
+    margin-top: 12px;
+}
+.modal_post{
+    background-color: #efefef;
+    margin-bottom: 20px;
+    text-align: center;
+   padding: 100px;
+   line-height: 50px;
+   font-size: 20px;
+}
+#fileInput {
+    display: none;
+}
+.label {
+    background-color: #2196F3;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.ant-modal-title{
+    padding: 10px;
+    text-align: center;
+}
+.sidenav_more button{
+    padding: 0;
+}
+.post__img{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: -13px;
+}
+.post__img1{
+    flex: 0.5;
+}
+.post__img2{
+    flex: 0.5;
+    padding-left: 10px;
+    max-height: 200px;
+    /* overflow-y: auto; */
+    display: flex;
+    flex-direction: column;
+}
+.modal_post .label{
+    padding: 0 10px;
+}
+
+.infomation{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.info-right{
+    display: flex;
+    gap: 30px;
+    font-size: 17px;
+}
+
+.heading-share{
+    color: #45b3fa;
+    cursor: pointer;
+    background: transparent;
+    border: transparent;
+    margin-left: 120px;
+}
+
+.heading-share:hover{
+    opacity: 0.8;
+}
+
+.modal__button{
+    min-width: 800px;
+}
+
+#text-content{
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin-bottom: -3px;
+    resize: none;
+}
+
+.post__map{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 10px;
+}
