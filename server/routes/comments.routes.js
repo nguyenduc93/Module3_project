@@ -72,16 +72,6 @@ router.post("/update", async (req, res) => {
   }
 });
 
-// Cập nhật lại reaction để bỏ thả tim
-// router.post("/unheart", async(req, res) =>{
-//   const {reaction, postId, userId} = req.body
-//   try {
-//     await database.execute(`UPDATE`)
-//   } catch (error) {
-//     console.log(error);
-//   }
-// })
-
 // Lấy danh sách comments
 router.get("/", async (req, res) => {
   try {

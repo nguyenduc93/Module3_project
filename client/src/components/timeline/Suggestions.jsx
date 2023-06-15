@@ -8,7 +8,7 @@ import axios from "axios";
 const Suggestions = () => {
   let user = JSON.parse(localStorage.getItem("user"));
   const [userFr, setUserFr] = useState("");
-  const [followStatus, setFollowStatus] = useState({});
+  const [followStatus, setFollowStatus] = useState([]);
 
   // Lấy thông tin của những user đã đăng ký
   useEffect(() => {
@@ -32,6 +32,12 @@ const Suggestions = () => {
         followerId: user.userId,
         followeeId: followeeId,
       });
+
+      // Cập nhật trạng thái theo dõi trong state
+      setFollowStatus((prevStatus) => [
+        ...prevStatus,
+        { followerId: user.userId, followeeId: followeeId, statusFl: 0 },
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -53,6 +59,14 @@ const Suggestions = () => {
         followerId: user.userId,
         followeeId: id,
       });
+
+      // Cập nhật trạng thái hủy theo dõi trong state
+      setFollowStatus((prevStatus) =>
+        prevStatus.filter(
+          (follow) =>
+            follow.followerId !== user.userId || follow.followeeId !== id
+        )
+      );
     } catch (error) {
       console.log(error);
     }
@@ -95,15 +109,24 @@ const Suggestions = () => {
               return (
                 <div className="suggestions_userName" key={usersFr.userId}>
                   <div className="userName_left">
-                    <span className="avatar">
-                      <Avatar
-                        src={usersFr.avatarURL}
-                        className="avatarrr"
-                        size={50}
-                      >
-                        ĐN
-                      </Avatar>
-                    </span>
+                    <NavLink
+                      style={{ color: "black", textDecoration: "none" }}
+                      to={
+                        usersFr.userId === user.userId
+                          ? `/detail/${user.userId}`
+                          : `/detail/friends/${usersFr.userId}`
+                      }
+                    >
+                      <span className="avatar">
+                        <Avatar
+                          src={usersFr.avatarURL}
+                          className="avatarrr"
+                          size={50}
+                        >
+                          ĐN
+                        </Avatar>
+                      </span>
+                    </NavLink>{" "}
                     <div className="userName_info">
                       <span className="userName">{usersFr.userName}</span>
                       <span className="relation">Có Ngọc Trinh theo dõi</span>
@@ -115,13 +138,13 @@ const Suggestions = () => {
                   >
                     Theo dõi
                   </button> */}
-                  {followStatus &&
+                  {followStatus.length > 0 &&
                   followStatus.filter(
                     (follow) =>
                       follow.followerId === user.userId &&
                       follow.followeeId === usersFr.userId
                   ).length > 0 ? (
-                    followStatus &&
+                    followStatus.length > 0 &&
                     followStatus.filter(
                       (follow) =>
                         follow.followerId === user.userId &&

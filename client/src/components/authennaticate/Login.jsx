@@ -26,6 +26,8 @@ function Login() {
       if (response.data.status === 200) {
         notification.success({
           message: "Đăng nhập thành công!",
+          placement: "top",
+          duration: 2,
         });
         localStorage.setItem("user", JSON.stringify(response.data.data[0]));
         setTimeout(() => {
@@ -34,11 +36,15 @@ function Login() {
       } else {
         notification.error({
           message: "Tài khoản không tồn tại!",
+          placement: "top",
+          duration: 2,
         });
       }
     } catch (error) {
       notification.error({
         message: "Email hoặc Password sai!",
+        placement: "top",
+        duration: 2,
       });
     }
   };

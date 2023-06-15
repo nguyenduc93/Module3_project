@@ -7,14 +7,19 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewCompactOutlinedIcon from "@mui/icons-material/ViewCompactOutlined";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PermContactCalendarOutlinedIcon from "@mui/icons-material/PermContactCalendarOutlined";
-// import PhotoCameraOutlinedIcon from "@mui/icons-material/PhotoCameraOutlined";
+import PhotoCameraOutlinedIcon from "@mui/icons-material/PhotoCameraOutlined";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Button, Modal } from "antd";
+import { notification } from "antd";
 
 const DetailUser = () => {
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isFolloweesModalOpen, setIsFolloweesModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal2 = () => {
+    setIsModalOpen(true);
+  };
   const showModal = () => {
     setIsFollowersModalOpen(true);
   };
@@ -27,6 +32,8 @@ const DetailUser = () => {
   const [posts, setPosts] = useState("");
   const [followee, setFollowee] = useState("");
   const [follower, setFollower] = useState("");
+  const [followStatus, setFollowStatus] = useState([]);
+  const [tableCommets, setTableComments] = useState("");
   const { id } = useParams();
 
   // Cập nhật avatar
@@ -39,6 +46,11 @@ const DetailUser = () => {
           `http://localhost:8001/upload/${id}`,
           formData
         );
+        if (response.data.status === "Success123") {
+          notification.success({
+            message: "Cập nhật avatar thành công!!!",
+          });
+        }
         const updatedUser = { ...user, avatarURL: response.data.url };
         localStorage.setItem("user", JSON.stringify(updatedUser));
         setUser(updatedUser);
@@ -88,6 +100,77 @@ const DetailUser = () => {
     };
     getData();
   }, [user.userId]);
+
+  // Lấy giá trị bảng friends
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await axios.get("http://localhost:8001/follow");
+      setFollowStatus(response.data.result);
+    };
+    fetchData();
+  }, []);
+
+  // Hàm post Id vào bảng Friends
+  const handleButton = async (followeeId) => {
+    try {
+      await axios.post(`http://localhost:8001/follow`, {
+        followerId: user.userId,
+        followeeId: followeeId,
+      });
+      // Cập nhật trạng thái theo dõi trong state
+      setFollowStatus((prevStatus) => [
+        ...prevStatus,
+        { followerId: user.userId, followeeId: followeeId, statusFl: 0 },
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Bỏ theo dõi người dùng
+  const handleUnfollow = async (id) => {
+    try {
+      await axios.post("http://localhost:8001/follow/unfollow", {
+        followerId: user.userId,
+        followeeId: id,
+      });
+
+      // Cập nhật trạng thái hủy theo dõi trong state
+      setFollowStatus((prevStatus) =>
+        prevStatus.filter(
+          (follow) =>
+            follow.followerId !== user.userId || follow.followeeId !== id
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Lấy toàn bộ comments về
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await axios.get("http://localhost:8001/comments");
+      setTableComments(response.data.result);
+    };
+    fetchData();
+  }, []);
+
+  // Xóa bài viết
+  const handleDelete = async (id) => {
+    try {
+      let response = await axios.delete(`http://localhost:8001/post/${id}`);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+      setIsModalOpen(false);
+      if (response.data.status === 200) {
+        notification.success({
+          message: "Xóa bài viết thành công!!!",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <div className="box-profile">
@@ -167,9 +250,41 @@ const DetailUser = () => {
                               <p>{follow.userName}</p>
                               <p>{follow.fullName}</p>
                             </div>
-                            <button className="edit-profile">
-                              Đang theo dõi
-                            </button>
+                            {followStatus.length > 0 &&
+                            followStatus.filter(
+                              (follows) =>
+                                follows.followerId === user.userId &&
+                                follows.followeeId === follow.userId
+                            ).length > 0 ? (
+                              followStatus.length > 0 &&
+                              followStatus.filter(
+                                (follows) =>
+                                  follows.followerId === user.userId &&
+                                  follows.followeeId === follow.userId &&
+                                  follows.statusFl === 0
+                              ).length > 0 ? (
+                                <button
+                                  className="folow_button1"
+                                  onClick={() => handleUnfollow(follow.userId)}
+                                >
+                                  Đang theo dõi
+                                </button>
+                              ) : (
+                                <button
+                                  className="folow_button"
+                                  onClick={() => handleButton(follow.userId)}
+                                >
+                                  Theo dõi
+                                </button>
+                              )
+                            ) : (
+                              <button
+                                className="folow_button"
+                                onClick={() => handleButton(follow.userId)}
+                              >
+                                Theo dõi
+                              </button>
+                            )}
                           </div>
                         );
                       })}
@@ -210,7 +325,10 @@ const DetailUser = () => {
                               <p>{follow.userName}</p>
                               <p>{follow.fullName}</p>
                             </div>
-                            <button className="edit-profile">
+                            <button
+                              className="edit-profile"
+                              onClick={() => handleUnfollow(follow.userId)}
+                            >
                               Đang theo dõi
                             </button>
                           </div>
@@ -311,43 +429,40 @@ const DetailUser = () => {
                   </div>
                 </button>
               </div>
-              {/* <div className="upload-post">
-                <div className="icon-cam">
-                  <PhotoCameraOutlinedIcon style={{ fontSize: 40 }} />
-                </div>
-                <h1>Chia sẻ ảnh</h1>
-                <p>
-                  Khi bạn chia sẻ ảnh, ảnh sẽ xuất hiện trên trang cá nhân của
-                  bạn.
-                </p>
-                <button className="share"> Chia sẻ ảnh đầu tin của bạn</button>
-              </div> */}
 
               <div className="container">
-                <div className="gallery">
-                  {posts &&
-                    posts.map((post) => {
-                      return (
-                        <div
-                          className="gallery-item"
-                          tabIndex={0}
-                          key={post.postId}
-                        >
-                          <img
-                            src={post.image}
-                            className="gallery-image"
-                            alt=""
-                          />
-                          <div className="gallery-item-info">
-                            <ul>
-                              <li className="gallery-item-likes">
-                                <span className="visually-hidden">Likes:</span>
-                                <i
-                                  className="fas fa-heart"
-                                  aria-hidden="true"
-                                />{" "}
-                                56
-                              </li>
+                {posts.length > 0 ? (
+                  <div className="gallery">
+                    {posts.map((post) => (
+                      <div
+                        className="gallery-item"
+                        tabIndex={0}
+                        key={post.postId}
+                      >
+                        <img
+                          src={post.image}
+                          className="gallery-image"
+                          alt=""
+                        />
+                        <div className="gallery-item-info">
+                          <ul>
+                            <li className="gallery-item-likes">
+                              <span className="visually-hidden">Likes:</span>
+                              <i
+                                className="fas fa-heart"
+                                aria-hidden="true"
+                              />{" "}
+                              {tableCommets &&
+                                tableCommets.filter(
+                                  (tables) =>
+                                    tables.reaction === 1 &&
+                                    tables.postId === post.postId
+                                ).length}{" "}
+                            </li>
+                            <Button
+                              onClick={showModal2}
+                              style={{ background: "none", border: "none" }}
+                            >
                               <li className="gallery-item-comments">
                                 <span className="visually-hidden">
                                   Comments:
@@ -356,14 +471,63 @@ const DetailUser = () => {
                                   className="fas fa-comment"
                                   aria-hidden="true"
                                 />{" "}
-                                2
+                                {tableCommets &&
+                                  tableCommets.filter(
+                                    (tables) =>
+                                      tables.commentUser !== "" &&
+                                      tables.postId === post.postId
+                                  ).length}
                               </li>
-                            </ul>
-                          </div>
+                            </Button>
+                            <Modal
+                              title="Chỉnh sửa bài viết"
+                              open={isModalOpen}
+                              onOk={() => setIsModalOpen(false)}
+                              onCancel={() => setIsModalOpen(false)}
+                              footer={[]}
+                              width={400}
+                            >
+                              <div style={{ textAlign: "center" }}>
+                                <button
+                                  style={{
+                                    color: "red",
+                                    border: "none",
+                                    background: "none",
+                                  }}
+                                  onClick={() => handleDelete(post.postId)}
+                                >
+                                  Xóa
+                                </button>{" "}
+                                <hr />
+                                <p>Chỉnh sửa</p> <hr />
+                                <p>Ẩn lượt thích</p> <hr />
+                                <p>Tắt tính năng bình luận</p> <hr />
+                                <p>Chia sẻ lên...</p> <hr />
+                                <p>Đi tới bài viết</p> <hr />
+                                <p>Sao chép liên kết</p> <hr />
+                                <p>Nhúng</p> <hr />
+                              </div>
+                            </Modal>
+                          </ul>
                         </div>
-                      );
-                    })}
-                </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="upload-post">
+                    <div className="icon-cam">
+                      <PhotoCameraOutlinedIcon style={{ fontSize: 40 }} />
+                    </div>
+                    <h1>Chia sẻ ảnh</h1>
+                    <p>
+                      Khi bạn chia sẻ ảnh, ảnh sẽ xuất hiện trên trang cá nhân
+                      của bạn.
+                    </p>
+                    <button className="share">
+                      Chia sẻ ảnh đầu tin của bạn
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

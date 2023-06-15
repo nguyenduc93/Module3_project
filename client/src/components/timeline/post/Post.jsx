@@ -101,7 +101,24 @@ const Post = () => {
         postId: postId,
         userId: user.userId,
       });
-      setComment("");
+      setTableComments((prevGetComments) => [
+        ...prevGetComments,
+        {
+          commentUser: comment,
+          reaction: 0,
+          postId: postId,
+          userId: user.userId,
+        },
+      ]);
+      setGetComments((prevGetComments) => [
+        ...prevGetComments,
+        {
+          commentUser: comment,
+          reaction: 0,
+          avatarURL: user.avatarURL,
+          userName: user.userName,
+        },
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -116,6 +133,10 @@ const Post = () => {
         postId: id,
         userId: user.userId,
       });
+      setTableComments((prevComments) => [
+        ...prevComments,
+        { commentUser: "", reaction: 1, postId: id, userId: user.userId },
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -129,6 +150,15 @@ const Post = () => {
         reaction: 0,
         postId: id,
         userId: user.userId,
+      });
+
+      setTableComments((prevComments) => {
+        return prevComments.map((comment) => {
+          if (comment.postId === id && comment.userId === user.userId) {
+            return { ...comment, reaction: 0 };
+          }
+          return comment;
+        });
       });
     } catch (error) {
       console.log(error);
@@ -150,29 +180,38 @@ const Post = () => {
           userFr
             .filter((users) => users.userId !== user.userId)
             .slice(-5)
-            .map((usersFr) => {
+            .map((usersFr, index) => {
               return (
-                <div className="renderAv" key={usersFr.userId}>
-                  <Avatar
-                    src={usersFr.avatarURL}
-                    className="avatarrr"
-                    size={80}
-                  >
-                    ĐN
-                  </Avatar>
-                  <p>{usersFr.useName}</p>
-                </div>
+                <NavLink
+                  style={{ color: "black", textDecoration: "none" }}
+                  to={
+                    usersFr.userId === user.userId
+                      ? `/detail/${user.userId}`
+                      : `/detail/friends/${usersFr.userId}`
+                  }
+                >
+                  <div className="renderAv" key={index}>
+                    <Avatar
+                      src={usersFr.avatarURL}
+                      className="avatarrr"
+                      size={80}
+                    >
+                      ĐN
+                    </Avatar>
+                    <p>{usersFr.useName}</p>
+                  </div>
+                </NavLink>
               );
             })}
       </div>
 
       <div className="post">
         {posts &&
-          posts.map((post) => {
+          posts.map((post, index) => {
             return (
               <>
                 <div className="post_header">
-                  <div className="post_headerAuthor" key={post.postId}>
+                  <div className="post_headerAuthor" key={index}>
                     <Avatar src={post.avatarURL} className="avatarrr" size={50}>
                       ĐN
                     </Avatar>
@@ -257,7 +296,7 @@ const Post = () => {
                             tables.userId === user.userId &&
                             tables.reaction === 1
                         ) ? (
-                          <span key={post.postId}>
+                          <span>
                             <button
                               onClick={() => handleuUnReaction(post.postId)}
                             >
@@ -268,7 +307,7 @@ const Post = () => {
                             </button>
                           </span>
                         ) : (
-                          <span key={post.postId}>
+                          <span>
                             <button onClick={() => handleReaction(post.postId)}>
                               <FavoriteBorderIcon className="postIcon" />
                             </button>
@@ -413,10 +452,17 @@ const Post = () => {
                                       // style={{ width: "100%" }}
                                       className="commentss"
                                       type="text"
+                                      value={comment}
                                       placeholder="Thêm bình luận..."
                                       onChange={(e) =>
                                         setComment(e.target.value)
                                       }
+                                      onKeyUp={(e) => {
+                                        if (e.key === "Enter") {
+                                          handleComments(detail.postId);
+                                          setComment("");
+                                        }
+                                      }}
                                     />
                                     <button
                                       onClick={() => {
@@ -472,7 +518,14 @@ const Post = () => {
                     <input
                       type="text"
                       placeholder="Thêm bình luận..."
+                      value={comment}
                       onChange={(e) => setComment(e.target.value)}
+                      onKeyUp={(e) => {
+                        if (e.key === "Enter") {
+                          handleComments(post.postId);
+                          setComment("");
+                        }
+                      }}
                     />
                     <button
                       onClick={() => {

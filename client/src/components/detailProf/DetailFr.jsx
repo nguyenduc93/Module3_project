@@ -26,6 +26,7 @@ const DetailFr = () => {
   const [friends1, setfriends1] = useState("");
   const [followee, setFollowee] = useState("");
   const [follower, setFollower] = useState("");
+  const [tableCommets, setTableComments] = useState("");
   useEffect(() => {
     // Lấy bài đăng và thông tin cá nhân của người mình đang follow
     const fetchData = async () => {
@@ -59,6 +60,15 @@ const DetailFr = () => {
     };
     getData();
   }, [id]);
+
+  // Lấy toàn bộ comments về
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await axios.get("http://localhost:8001/comments");
+      setTableComments(response.data.result);
+    };
+    fetchData();
+  }, []);
   return (
     <div>
       <div className="box-profile">
@@ -68,15 +78,11 @@ const DetailFr = () => {
         <div className="box-profile-content">
           <div className="profile-info-content">
             <div className="user-profile">
-              <label htmlFor="avatar-input" className="avatar-label">
-                <Avatar
-                  src={friends1.avatarURL}
-                  className="avatarrr"
-                  size={150}
-                >
-                  ĐN
-                </Avatar>
-              </label>
+              <Avatar src={friends1.avatarURL} className="avatarrr" size={150}>
+                ĐN
+              </Avatar>
+              {/* <label htmlFor="avatar-input" className="avatar-label">
+              </label> */}
               <input type="file" name="avatar" id="avatar-input" hidden />
               <div className="info">
                 <div className="info-user user-info">
@@ -102,7 +108,7 @@ const DetailFr = () => {
                   </button>
                 </div>
                 <div className="info-user">
-                  <button className="btn_flow">
+                  <button className="btn_flow qty2">
                     <span className="qty">{friends.length}</span> bài viết
                   </button>
                   <Button className="btn_flow" onClick={showModal1}>
@@ -310,7 +316,12 @@ const DetailFr = () => {
                                   className="fas fa-heart"
                                   aria-hidden="true"
                                 />{" "}
-                                56
+                                {tableCommets &&
+                                  tableCommets.filter(
+                                    (tables) =>
+                                      tables.reaction === 1 &&
+                                      tables.postId === friend.postId
+                                  ).length}{" "}
                               </li>
                               <li className="gallery-item-comments">
                                 <span className="visually-hidden">
@@ -320,7 +331,12 @@ const DetailFr = () => {
                                   className="fas fa-comment"
                                   aria-hidden="true"
                                 />{" "}
-                                2
+                                {tableCommets &&
+                                  tableCommets.filter(
+                                    (tables) =>
+                                      tables.commentUser !== "" &&
+                                      tables.postId === friend.postId
+                                  ).length}
                               </li>
                             </ul>
                           </div>

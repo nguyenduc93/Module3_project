@@ -148,25 +148,6 @@ router.get("/protected", authenticateToken, (req, res) => {
   res.status(200).json({ message: "Protected API endpoint" });
 });
 
-// Chức năng tìm kiếm
-// router.post("/search", async (req, res) => {
-//   const { name } = req.body;
-//   try {
-//     let data = await database.execute(
-//       `SELECT * FROM instagram.users WHERE userName LIKE "%${name}%"`
-//     );
-//     let [users] = data;
-//     res.json({
-//       status: "Success",
-//       users,
-//     });
-//   } catch (error) {
-//     res.json({
-//       error,
-//     });
-//   }
-// });
-
 router.get("/search", async (req, res) => {
   const { name } = req.query;
   try {

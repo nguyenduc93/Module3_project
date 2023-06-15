@@ -18,18 +18,24 @@ function Signup() {
       if (!email || email.length === 0) {
         notification.error({
           message: "Email không được để trống!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
       if (!/^\S+@\S+\.\S+$/.test(email)) {
         notification.error({
           message: "Email không đúng định dạng!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
       if (!userName || userName.length === 0) {
         notification.error({
           message: "Tên người dùng không được để trống!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
@@ -37,6 +43,8 @@ function Signup() {
         notification.error({
           message:
             "Tên người dùng chỉ được chứa chữ cái, khoảng trắng và có dấu!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
@@ -44,24 +52,32 @@ function Signup() {
       if (!fullName || fullName.length === 0) {
         notification.error({
           message: "Họ và tên không được để trống!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
       if (!/^[\p{L}\s']+$/u.test(fullName)) {
         notification.error({
           message: "Họ và tên chỉ được chứa chữ cái, khoảng trắng và có dấu!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
       if (!password || password.length === 0) {
         notification.error({
           message: "Mật khẩu không được để trống!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
       if (password.length < 3) {
         notification.error({
           message: "Mật khẩu phải trên 3 ký tự!",
+          placement: "top",
+          duration: 2,
         });
         return;
       }
@@ -78,6 +94,8 @@ function Signup() {
       if (response.status === 200) {
         notification.success({
           message: "Đăng ký thành công!",
+          placement: "top",
+          duration: 2,
         });
         setTimeout(() => {
           navigate("/login");
@@ -87,6 +105,8 @@ function Signup() {
       if (error.response.status === 409) {
         notification.error({
           message: "Email đã được đăng ký!",
+          placement: "top",
+          duration: 2,
         });
       }
     }

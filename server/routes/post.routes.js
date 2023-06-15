@@ -80,4 +80,18 @@ router.get("/detail/:id", async (req, res) => {
   }
 });
 
+// Xóa bài viết
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await database.execute(`DELETE FROM instagram.posts WHERE (postId = ?);`, [
+      id,
+    ]);
+    res.json({
+      status: 200,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 module.exports = router;

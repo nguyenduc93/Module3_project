@@ -90,7 +90,7 @@ const Sidenav = () => {
   };
 
   // Hàm tìm kiếm trong danh sách users
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState("");
   const [results, setResults] = useState("");
   const handleSubmit = async () => {
     try {
@@ -125,6 +125,7 @@ const Sidenav = () => {
   };
 
   const users = JSON.parse(localStorage.getItem("user"));
+
   // Hàm đăng bài viết của user đang đăng nhập
   const handlePost = async () => {
     try {
@@ -141,9 +142,6 @@ const Sidenav = () => {
     }
   };
 
-  // Reset states
-  // setSelectedFile(null);
-  // setModalOpen(false);
   return (
     <div className="sidenav">
       <Link to={"/login"}>
@@ -167,11 +165,11 @@ const Sidenav = () => {
           </Space>
           <Drawer
             className="nav123"
+            key={placement}
             placement={placement}
             closable={false}
             onClose={onClose}
             open={open1}
-            key={placement}
           >
             <div className="search_nav">
               <input
@@ -179,6 +177,11 @@ const Sidenav = () => {
                 placeholder="Tìm Kiếm"
                 onChange={(e) => {
                   setSearch(e.target.value);
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    handleSubmit();
+                  }
                 }}
               />{" "}
               <button className="span_icon" onClick={handleSubmit}>
